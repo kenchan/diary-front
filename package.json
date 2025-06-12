@@ -19,7 +19,7 @@
 		"@astrojs/vercel": "^8.1.5",
 		"astro": "^5.9.2",
 		"highlight.js": "^11.9.0",
-		"isomorphic-dompurify": "^2.4.0",
+		"isomorphic-dompurify": "^2.25.0",
 		"marked": "^15.0.12",
 		"tailwindcss": "^3.4.1"
 	},
