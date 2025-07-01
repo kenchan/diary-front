@@ -26,14 +26,11 @@ jobs:
     - name: Build Astro project
       run: npm run build
       
-    - name: Notify on failure
+    - name: Run Claude on failure
       if: failure() && github.event_name == 'pull_request'
-      uses: actions/github-script@v7
+      uses: anthropics/claude-code-action@beta
       with:
-        script: |
-          github.rest.issues.createComment({
-            issue_number: context.payload.pull_request.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '@claude Build failed! Please check the CI logs and fix the build errors.'
-          })
+        anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+        custom_instructions: |
+          The build has failed. Please analyze the error logs above and provide a fix.
+          Focus on the specific build error and suggest the minimal changes needed to fix it.
