@@ -36,6 +36,9 @@ jobs:
       uses: anthropics/claude-code-action@beta
       with:
         anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-        custom_instructions: |
-          The build has failed. Please analyze the error logs above and provide a fix.
-          Focus on the specific build error and suggest the minimal changes needed to fix it.
+        direct_prompt: |
+          The CI build has failed. Please analyze the error logs from the "Build Astro project" step above and fix the build error.
+          
+          The error shows that the module '@astrojs/non-existent-plugin' cannot be found. Please remove this import and its usage from astro.config.mjs to fix the build.
+          
+          After making the fix, commit the changes with a descriptive message.
