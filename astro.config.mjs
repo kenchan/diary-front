@@ -8,12 +8,10 @@ import vercel from "@astrojs/vercel/serverless";
 // https://astro.build/config
 import sitemap from "@astrojs/sitemap";
 
-// This will cause CI to fail
-import nonExistentPlugin from "@astrojs/non-existent-plugin";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), sitemap(), nonExistentPlugin()],
+  integrations: [tailwind(), sitemap()],
   output: 'server',
   adapter: vercel({
     analytics: true
