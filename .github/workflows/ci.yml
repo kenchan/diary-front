@@ -37,8 +37,15 @@ jobs:
       with:
         anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
         direct_prompt: |
-          The CI build has failed. Please analyze the error logs from the "Build Astro project" step above and fix the build error.
+          The CI build has failed. Please analyze the error logs from the previous steps to understand what went wrong.
           
-          The error shows that the module '@astrojs/non-existent-plugin' cannot be found. Please remove this import and its usage from astro.config.mjs to fix the build.
+          Steps to take:
+          1. Examine the build error messages carefully
+          2. Identify the root cause of the failure
+          3. If you can fix the issue, make the necessary changes and commit them with a descriptive message
+          4. If the issue is complex or unclear, provide a detailed comment explaining:
+             - What the error indicates
+             - Possible causes
+             - Suggested next steps for investigation or resolution
           
-          After making the fix, commit the changes with a descriptive message.
+          Focus on providing a clear analysis and actionable solution or guidance.
