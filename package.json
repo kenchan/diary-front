@@ -24,7 +24,7 @@
 		"tailwindcss": "^3.4.1"
 	},
 	"devDependencies": {
-		"@types/dompurify": "^3.0.5",
+		"@types/dompurify": "^3.2.0",
 		"@types/marked": "^6.0.0"
 	}
 }
