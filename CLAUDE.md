@@ -4,85 +4,80 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **personal Japanese blog** ("けんちゃんくんさんのWeb日記") built with **Astro v5** and **Tailwind CSS**. The site contains 500+ diary entries spanning from 2011-2023, deployed on Vercel at https://diary.shu-cream.net/.
+Personal Japanese blog ("けんちゃんくんさんのWeb日記") built with **Astro v5** and **Tailwind CSS**. Contains 500+ diary entries from 2011-2023, deployed on Vercel at https://diary.shu-cream.net/.
 
 ## Development Commands
 
 ```bash
-# Install dependencies
-npm install
-
-# Start development server (localhost:3000 by default)
-npm run dev
-# or 
-npm start
-
-# Build for production
-npm run build
-
-# Preview production build locally
-npm run preview
-
-# Run Astro CLI commands
-npm run astro -- [command]
+npm install          # Install dependencies
+npm run dev          # Start dev server (localhost:3000)
+npm run build        # Build for production
+npm run preview      # Preview production build locally
+npm run astro -- [command]  # Run Astro CLI commands
 ```
 
 ## Architecture
 
-### Content Management
-- **Content Collection**: Markdown files stored in `src/content/article/`
-- **500+ entries**: Personal diary entries from 2011-2023 in Japanese
-- **File naming**: Mix of date-based (2023-01-01.md) and descriptive titles
-- **No frontmatter schema**: Articles rely on filename and content structure
+### Rendering Strategy
+- **Hybrid mode**: `output: 'server'` in astro.config.mjs with per-page `prerender: true`
+- All pages use `prerender: true` for static generation despite serverless adapter
+- Enables incremental static regeneration on Vercel
 
-### Site Structure
-- **Homepage**: `src/pages/index.astro` - displays latest 10 articles
-- **Article pages**: `src/pages/[slug].astro` - individual diary entries
-- **Pagination**: `src/pages/page/[page].astro` - 10 articles per page
-- **Feeds**: RSS (`src/pages/rss.xml.ts`) and Atom (`src/pages/atom.xml.astro`)
-- **SEO**: Sitemap, robots.txt, OpenGraph meta tags
+### Content Collection
+- **Location**: `src/content/article/` (500+ markdown files)
+- **Schema**: Defined in `src/content/article/config.ts` using Zod
+  - `title`: string (article title)
+  - `slug`: string (URL slug, usually same as filename)
+  - `publishedOn`: date (display date for sorting)
+  - `createdAt`: date (original creation timestamp)
+  - `updatedAt`: date (last modification timestamp)
+- **Sorting**: Articles sorted by `publishedOn` descending throughout site
 
-### Styling & UI
-- **Tailwind CSS v3**: Utility-first styling
-- **Japanese typography**: Custom font stacks optimized for Japanese text
-- **Responsive design**: Mobile-first approach with `max-w-3xl` container
-- **Color scheme**: Green header (`bg-green-900`), gray background (`bg-gray-200`)
-- **Icons**: FontAwesome for social media links
+### Page Structure
+- `src/pages/index.astro` - Latest 10 articles
+- `src/pages/[slug].astro` - Individual article pages (dynamic route with `getStaticPaths`)
+- `src/pages/page/[page].astro` - Pagination (10 articles/page, uses custom `chunk` function)
+- `src/pages/rss.xml.ts` & `src/pages/atom.xml.astro` - RSS/Atom feeds
+- All use `getCollection('article')` to fetch content
 
-### Special Features
-- **Hatena Star integration**: Japanese social bookmarking service
-- **Social links**: Mastodon, Twitter, GitHub in footer
-- **Markdown processing**: Uses `marked` library with syntax highlighting via `highlight.js`
-- **HTML sanitization**: `isomorphic-dompurify` for security
+### Components & Layout
+- `src/layouts/Layout.astro` - Base layout with:
+  - Japanese `lang="ja"` attribute
+  - OpenGraph meta tags (title, type, url, image)
+  - Hatena Star integration (Japanese social bookmarking)
+  - Green header (`bg-green-900`) with site title
+  - Footer with Mastodon, Twitter, GitHub links (FontAwesome icons)
+- `src/components/ArticleCard.astro` - Article rendering component:
+  - Renders markdown content via `await article.render()`
+  - Optional Hatena Star container (`showHS` prop)
+  - Shows publishedOn, createdAt, updatedAt timestamps
+  - Contains global article styles (h2 borders, link colors, code blocks, etc.)
 
-## Deployment Configuration
+### Styling Approach
+- **Tailwind v3** with `@apply` directives in scoped/global `<style>` blocks
+- **Global article styles**: Defined in both `index.astro`, `[page].astro`, and `ArticleCard.astro`
+- **Color scheme**: Green header (`bg-green-900`), gray background (`bg-gray-200`), gray cards (`bg-gray-100`)
+- **Typography**: Japanese-optimized with `text-lg leading-8` for readability
+- **Responsive**: `max-w-3xl` container, FontAwesome icons
 
-- **Platform**: Vercel with serverless adapter
-- **Node.js**: Fixed to v22.x
-- **Caching**: Aggressive caching (5min pages, 1hr RSS) via `vercel.json`
-- **Analytics**: Vercel Analytics enabled
+### Markdown Processing
+- **Syntax highlighting**: Shiki with `github-light` theme (astro.config.mjs)
+- **Dependencies**: `marked`, `highlight.js`, `isomorphic-dompurify` for additional processing if needed
+- Content rendered via Astro's built-in markdown engine
+
+## Deployment
+
+- **Platform**: Vercel with `@astrojs/vercel/serverless` adapter
+- **Node.js**: v22.x (specified in package.json engines)
+- **Caching** (vercel.json):
+  - Pages: `s-maxage=300` (5 minutes)
+  - RSS: `s-maxage=3600` (1 hour)
+- **Analytics**: Enabled via adapter config
 - **Domain**: https://diary.shu-cream.net/
 
-## Key Files
+## Key Implementation Details
 
-- `astro.config.mjs`: Main configuration with Vercel adapter, Tailwind, sitemap
-- `src/layouts/Layout.astro`: Main page layout with Japanese SEO optimization
-- `src/components/ArticleCard.astro`: Article listing component
-- `vercel.json`: Deployment and caching configuration
-- `src/content/article/`: All diary entries (500+ markdown files)
-
-## Content Patterns
-
-- **Personal diary**: Daily life, work experiences, technical notes
-- **Japanese language**: All content in Japanese
-- **Chronological**: Entries span 12+ years (2011-2023)
-- **Mixed topics**: Programming, work, family, hobbies, book reviews
-- **No categories/tags**: Simple chronological organization
-
-## Development Notes
-
-- **Static generation**: All pages pre-rendered at build time
-- **No database**: File-based content management
-- **Markdown-centric**: All content authored in Markdown
-- **SEO optimized**: Japanese-specific meta tags and social sharing
-- **Performance focused**: Static generation with CDN caching
+- **Pagination logic**: Custom `chunk()` function in `src/pages/page/[page].astro` splits articles into pages of 10
+- **Hatena Star**: Configured to target `h1 a` for URI and `div.hatenaStar` for container
+- **Static paths**: Both `[slug].astro` and `[page].astro` use `getStaticPaths()` with `prerender: true`
+- **Content sorting**: Consistent `publishedOn` descending sort across all pages
