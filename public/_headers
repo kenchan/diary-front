@@ -1,0 +1,10 @@
+# Cache RSS feed for 1 hour
+/rss.xml
+  Cache-Control: max-age=0, s-maxage=3600, stale-while-revalidate=3600
+
+/atom.xml
+  Cache-Control: max-age=0, s-maxage=3600, stale-while-revalidate=3600
+
+# Cache all other pages for 5 minutes
+/*
+  Cache-Control: max-age=0, s-maxage=300, stale-while-revalidate=300
