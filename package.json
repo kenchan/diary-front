@@ -21,7 +21,7 @@
 		"astro": "^5.16.6",
 		"highlight.js": "^11.11.1",
 		"isomorphic-dompurify": "^2.35.0",
-		"marked": "^17.0.6",
+		"marked": "^18.0.4",
 		"tailwindcss": "^3.4.1"
 	},
 	"devDependencies": {
