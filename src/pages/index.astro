@@ -20,6 +20,8 @@ const articles = (await getCollection("article")).sort((a, b) => {
 </Layout>
 
 <style is:global>
+  @reference "../styles/global.css";
+
   article {
     @apply text-gray-600;
   }
@@ -60,6 +62,8 @@ const articles = (await getCollection("article")).sort((a, b) => {
 </style>
 
 <style>
+  @reference "../styles/global.css";
+
   .pager a {
     @apply underline;
     @apply text-blue-800;
