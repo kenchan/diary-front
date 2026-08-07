@@ -8,7 +8,7 @@ import Article from '../components/ArticleCard.astro'
 export async function getStaticPaths() {
   const articleEntries = await getCollection('article');
   return articleEntries.map(article => ({
-    params: { slug: article.slug }, props: { article },
+    params: { slug: article.data.slug }, props: { article },
   }));
 }
 

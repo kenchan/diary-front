@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
 
 interface Props {
   article: CollectionEntry<'article'>;
@@ -8,7 +9,7 @@ interface Props {
 }
 
 const { article, showHS } = Astro.props;
-const { Content } = await article.render();
+const { Content } = await render(article);
 ---
 
 <article class="m-5 p-5 border rounded border-gray-200 shadow bg-gray-100">
