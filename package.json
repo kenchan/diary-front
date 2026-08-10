@@ -18,7 +18,7 @@
 		"@astrojs/sitemap": "^3.7.2",
 		"@astrojs/vercel": "^10.0.6",
 		"astro": "^6.2.1",
-		"autoprefixer": "^10.4.21",
+		"autoprefixer": "^10.5.4",
 		"highlight.js": "^11.11.1",
 		"isomorphic-dompurify": "^3.21.0",
 		"marked": "^18.0.7",
